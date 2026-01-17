@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Admin Claims - Findora{% endblock %}
+
+{% block content %}
+
+<div class="glass-card p-4 p-md-5 mb-4">
+  <h2 class="fw-bold mb-1">
+    <i class="bi bi-shield-lock"></i> Admin Approval Panel
+  </h2>
+  <p class="text-muted mb-0">
+    Only <b>Expensive Item Claims</b> appear here 🔐 (Admin must approve first)
+  </p>
+</div>
+
+<div class="row g-4">
+  {% for c in claims %}
+  <div class="col-md-6 col-lg-4">
+    <div class="glass-card p-4 item-card">
+
+      <!-- Badges -->
+      <div class="d-flex gap-2 flex-wrap mb-2">
+        <span class="badge-soft badge-expensive">💎 Expensive</span>
+
+        {% if c.item.post_type == "lost" %}
+          <span class="badge-soft badge-lost">🔴 LOST</span>
+        {% else %}
+          <span class="badge-soft badge-found">🟢 FOUND</span>
+        {% endif %}
+
+        <span class="badge-soft badge-expensive">
+          Status: {{ c.status.replace("_"," ").title() }}
+        </span>
+      </div>
+
+      <!-- Item -->
+      <h5 class="fw-bold mb-1">{{ c.item.title }}</h5>
+
+      <p class="text-muted mb-2">
+        <i class="bi bi-geo-alt"></i> {{ c.item.location }}
+      </p>
+
+      <p class="text-muted mb-3">
+        <i class="bi bi-tag"></i> {{ c.item.category }}
+      </p>
+
+      <!-- Claim Message -->
+      <div class="glass-card p-3 mb-3" style="background: rgba(255,255,255,0.35);">
+        <p class="fw-bold mb-1"><i class="bi bi-chat-left-text"></i> Claimer Message</p>
+        <p class="text-muted mb-0">{{ c.message }}</p>
+
+        {% if c.proof_answer %}
+          <hr class="opacity-25 my-3">
+          <p class="fw-bold mb-1"><i class="bi bi-patch-check"></i> Proof Answer</p>
+          <p class="text-muted mb-0">{{ c.proof_answer }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Buttons -->
+      <div class="d-flex gap-2 flex-wrap">
+        <a class="btn btn-outline-custom w-100" href="/item/{{ c.item.id }}">
+          <i class="bi bi-eye"></i> View Item
+        </a>
+
+        <a class="btn btn-gradient w-100" href="/admin/claim-action/{{ c.id }}/approve">
+          ✅ Approve Claim
+        </a>
+
+        <a class="btn btn-outline-custom w-100" href="/admin/claim-action/{{ c.id }}/reject"
+           onclick="return confirm('Reject this claim?');">
+          ❌ Reject Claim
+        </a>
+      </div>
+
+      <!-- Clear Note -->
+      <div class="mt-3 text-muted small">
+        ✅ After admin approval → Finder can approve the claim.
+      </div>
+
+    </div>
+  </div>
+  {% endfor %}
+
+  {% if claims|length == 0 %}
+  <div class="col-12">
+    <div class="glass-card p-5 text-center">
+      <h4 class="fw-bold mb-2">No expensive claims waiting ✅</h4>
+      <p class="text-muted mb-0">All expensive item claims are already reviewed.</p>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

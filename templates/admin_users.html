@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Admin Users - Findora{% endblock %}
+
+{% block content %}
+
+<div class="glass-card p-4 p-md-5 mb-4">
+  <h2 class="fw-bold mb-1"><i class="bi bi-people"></i> Manage Users</h2>
+  <p class="text-muted mb-0">Make users Admin or remove Admin access 🔐</p>
+</div>
+
+<div class="glass-card p-4 p-md-5">
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>User</th>
+          <th>Email</th>
+          <th>Mobile</th>
+          <th>Role</th>
+          <th class="text-end">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td class="fw-bold">{{ loop.index }}</td>
+
+          <td>
+            <div class="fw-bold">{{ u.name }}</div>
+            <div class="text-muted small">Points: {{ u.points }}</div>
+          </td>
+
+          <td class="text-muted">{{ u.email }}</td>
+          <td class="text-muted">{{ u.mobile }}</td>
+
+          <td>
+            {% if u.role == "admin" %}
+              <span class="badge-soft badge-expensive">👑 Admin</span>
+            {% else %}
+              <span class="badge-soft badge-found">User</span>
+            {% endif %}
+          </td>
+
+          <td class="text-end">
+
+            <!-- ✅ Don't allow admin to change themselves -->
+            {% if current_user.id == u.id %}
+              <button class="btn btn-outline-custom btn-sm" disabled>
+                <i class="bi bi-lock"></i> You
+              </button>
+
+            {% else %}
+
+              {% if u.role == "admin" %}
+                <a href="/admin/remove-admin/{{ u.id }}"
+                   class="btn btn-outline-custom btn-sm"
+                   onclick="return confirm('Remove admin access from this user?');">
+                  <i class="bi bi-person-dash"></i> Remove Admin
+                </a>
+              {% else %}
+                <a href="/admin/make-admin/{{ u.id }}"
+                   class="btn btn-gradient btn-sm"
+                   onclick="return confirm('Make this user Admin?');">
+                  <i class="bi bi-person-check"></i> Make Admin
+                </a>
+              {% endif %}
+
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+
+  {% if users|length == 0 %}
+    <div class="text-center text-muted p-4">
+      No users found.
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

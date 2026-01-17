@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Return Status - Findora{% endblock %}
+
+{% block content %}
+
+<div class="glass-card p-4 p-md-5 mb-4">
+  <h2 class="fw-bold mb-1"><i class="bi bi-check2-circle"></i> Return Confirmation</h2>
+  <p class="text-muted mb-0">Both finder and owner must confirm ✅✅</p>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+
+    <div class="glass-card p-4 p-md-5">
+
+      <!-- Item Details -->
+      <div class="glass-card p-3 mb-4" style="background: rgba(255,255,255,0.35);">
+        <h5 class="fw-bold mb-1">{{ claim.item.title }}</h5>
+        <p class="text-muted mb-0">
+          <i class="bi bi-geo-alt"></i> {{ claim.item.location }}
+          &nbsp; • &nbsp;
+          <i class="bi bi-tag"></i> {{ claim.item.category }}
+        </p>
+      </div>
+
+      <!-- Status Badges -->
+      <div class="d-flex gap-2 flex-wrap mb-3">
+        <span class="badge-soft badge-expensive">
+          Status: {{ claim.status.replace("_"," ").title() }}
+        </span>
+
+        {% if claim.item.is_expensive %}
+          <span class="badge-soft badge-expensive">💎 Expensive</span>
+        {% endif %}
+      </div>
+
+      <!-- ✅ Step Status -->
+      <div class="row g-3">
+
+        <!-- Finder Confirmation -->
+        <div class="col-md-6">
+          <div class="glass-card p-4 text-center" style="background: rgba(255,255,255,0.35);">
+            <h6 class="fw-bold mb-2"><i class="bi bi-person-check"></i> Finder Confirmation</h6>
+
+            {% if log and log.finder_confirmed %}
+              <p class="text-success fw-bold mb-0">✅ Finder confirmed returned</p>
+            {% else %}
+              <p class="text-muted mb-3">Waiting for finder confirmation...</p>
+
+              {% if current_user.id == claim.finder_id %}
+                <a href="/return/finder/{{ claim.id }}" class="btn btn-gradient w-100">
+                  ✅ I Returned the Item
+                </a>
+              {% else %}
+                <button class="btn btn-outline-custom w-100" disabled>
+                  Only Finder can confirm
+                </button>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Owner Confirmation -->
+        <div class="col-md-6">
+          <div class="glass-card p-4 text-center" style="background: rgba(255,255,255,0.35);">
+            <h6 class="fw-bold mb-2"><i class="bi bi-person-heart"></i> Owner Confirmation</h6>
+
+            {% if log and log.claimer_confirmed %}
+              <p class="text-success fw-bold mb-0">✅ Owner confirmed received</p>
+            {% else %}
+              <p class="text-muted mb-3">Waiting for owner confirmation...</p>
+
+              {% if current_user.id == claim.claimer_id %}
+                <a href="/return/claimer/{{ claim.id }}" class="btn btn-gradient w-100">
+                  ✅ I Received the Item
+                </a>
+              {% else %}
+                <button class="btn btn-outline-custom w-100" disabled>
+                  Only Owner can confirm
+                </button>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 🎉 Final Completed -->
+      {% if log and log.finder_confirmed and log.claimer_confirmed %}
+      <div class="glass-card p-4 text-center mt-4" style="background: rgba(255,255,255,0.35);">
+        <h4 class="fw-bold text-success mb-1">🎉 Return Completed!</h4>
+        <p class="text-muted mb-0">
+          This claim is closed and the post is marked as <b>Returned</b> ✅
+        </p>
+      </div>
+      {% endif %}
+
+      <div class="text-center mt-4">
+        <a href="/explore" class="text-decoration-none fw-semibold">
+          <i class="bi bi-arrow-left"></i> Back to Explore
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

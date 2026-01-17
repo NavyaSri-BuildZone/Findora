@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Verify OTP - Findora{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+
+    <div class="glass-card p-4 p-md-5 mb-4">
+      <h2 class="fw-bold mb-1"><i class="bi bi-patch-check"></i> Verify OTP</h2>
+      <p class="text-muted mb-0">Enter the OTP sent to your email ✅</p>
+    </div>
+
+    <div class="glass-card p-4 p-md-5">
+      <form method="POST">
+
+        <label class="form-label fw-semibold">OTP</label>
+        <input class="form-control mb-4"
+               name="otp"
+               maxlength="6"
+               placeholder="Enter 6-digit OTP"
+               required>
+
+        <button class="btn btn-gradient btn-lg w-100">
+          ✅ Verify OTP
+        </button>
+      </form>
+
+      <div class="text-center mt-4">
+        <a href="/forgot-password" class="text-decoration-none fw-semibold">
+          Resend OTP
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

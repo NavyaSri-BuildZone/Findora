@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Register - Findora{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+
+    <div class="glass-card p-4 p-md-5 mb-4">
+      <h2 class="fw-bold mb-1">
+        <i class="bi bi-stars"></i> Create Account
+      </h2>
+      <p class="text-muted mb-0">Join Findora and start posting ✅</p>
+    </div>
+
+    <div class="glass-card p-4 p-md-5">
+      <form method="POST">
+
+        <label class="form-label fw-semibold"><i class="bi bi-person"></i> Name</label>
+        <input class="form-control mb-3" name="name" placeholder="Enter your name" required>
+
+        <label class="form-label fw-semibold"><i class="bi bi-envelope"></i> Email</label>
+        <input class="form-control mb-3" type="email" name="email" placeholder="Enter your email" required>
+
+        <label class="form-label fw-semibold"><i class="bi bi-phone"></i> Mobile</label>
+        <input class="form-control mb-3" name="mobile" maxlength="10" placeholder="10-digit mobile" required>
+
+        <label class="form-label fw-semibold"><i class="bi bi-lock"></i> Password</label>
+        <input class="form-control mb-4" type="password" name="password" placeholder="Minimum 8 characters" required>
+
+        <button class="btn btn-gradient btn-lg w-100">
+          <i class="bi bi-person-check"></i> Register
+        </button>
+
+      </form>
+
+      <div class="text-center mt-3 text-muted">
+        Already have an account?
+        <a href="/login" class="text-decoration-none fw-semibold">Login</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

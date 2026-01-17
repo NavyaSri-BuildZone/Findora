@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Chat - Findora{% endblock %}
+{% block content %}
+
+<div class="glass-card p-4 p-md-5 mb-4">
+  <h2 class="fw-bold mb-1"><i class="bi bi-chat-dots"></i> Anonymous Chat</h2>
+  <p class="text-muted mb-0">
+    Chat only between Finder & Claimer ✅
+  </p>
+</div>
+
+<div class="glass-card p-4 p-md-5">
+
+  <!-- Claim Info -->
+  <div class="glass-card p-3 mb-4" style="background: rgba(255,255,255,0.35);">
+    <h5 class="fw-bold mb-1">{{ claim.item.title }}</h5>
+    <p class="text-muted mb-0">
+      <i class="bi bi-geo-alt"></i> {{ claim.item.location }}
+      &nbsp; • &nbsp;
+      <i class="bi bi-tag"></i> {{ claim.item.category }}
+    </p>
+  </div>
+
+  <!-- Messages Box -->
+  <div class="glass-card p-3 mb-4"
+       style="background: rgba(255,255,255,0.35); max-height: 340px; overflow-y: auto;">
+
+    {% for m in messages %}
+      <div class="mb-3">
+
+        {% if m.sender_id == current_user.id %}
+          <div class="text-end">
+            <span class="badge-soft badge-expensive">You</span>
+            <div class="mt-2">{{ m.text }}</div>
+          </div>
+        {% else %}
+          <div class="text-start">
+            <span class="badge-soft badge-found">Other</span>
+            <div class="mt-2">{{ m.text }}</div>
+          </div>
+        {% endif %}
+
+        <div class="small text-muted mt-1">
+          {{ m.created_at.strftime("%d %b, %I:%M %p") }}
+        </div>
+
+      </div>
+      <hr class="opacity-25">
+    {% endfor %}
+
+    {% if messages|length == 0 %}
+      <div class="text-center text-muted py-4">
+        No messages yet 💬 Start the conversation ✅
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Send Message -->
+  <form method="POST" class="d-flex gap-2">
+    <input class="form-control" name="text" placeholder="Type your message..." required>
+    <button class="btn btn-gradient">
+      <i class="bi bi-send"></i>
+    </button>
+  </form>
+
+</div>
+
+{% endblock %}

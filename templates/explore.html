@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Explore - Findora{% endblock %}
+
+{% block content %}
+
+<div class="glass-card p-4 p-md-5 mb-4">
+  <h2 class="fw-bold mb-1"><i class="bi bi-search-heart"></i> Explore Items</h2>
+  <p class="text-muted mb-4">Find lost and found items fast using filters 🔍</p>
+
+  <!-- ✅ Working Filters -->
+  <form method="GET" action="/explore">
+    <div class="row g-3">
+      <div class="col-md-6 col-lg-5">
+        <input class="form-control"
+               name="q"
+               value="{{ request.args.get('q','') }}"
+               placeholder="Search item name (wallet, phone...)">
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <select class="form-control" name="category">
+          <option value="">All Categories</option>
+          {% for cat in ["Phone","Wallet","Keys","ID Card","Water Bottle","Bag","Earphones","Watch","Other"] %}
+            <option value="{{ cat }}" {% if request.args.get('category') == cat %}selected{% endif %}>
+              {{ cat }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-6 col-lg-2">
+        <select class="form-control" name="type">
+          <option value="">All</option>
+          <option value="lost" {% if request.args.get('type') == "lost" %}selected{% endif %}>Lost</option>
+          <option value="found" {% if request.args.get('type') == "found" %}selected{% endif %}>Found</option>
+        </select>
+      </div>
+
+      <div class="col-md-6 col-lg-2">
+        <button class="btn btn-gradient w-100">
+          <i class="bi bi-funnel"></i> Filter
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="row g-4">
+
+  {% for item in items %}
+  <div class="col-md-6 col-lg-4">
+    <div class="glass-card item-card">
+
+      {% if item.image_filename %}
+        <img class="item-thumb"
+             src="{{ url_for('static', filename='uploads/' + item.image_filename) }}"
+             alt="item image">
+      {% else %}
+        <div class="item-thumb d-flex align-items-center justify-content-center">
+          <i class="bi bi-image text-muted fs-1"></i>
+        </div>
+      {% endif %}
+
+      <div class="p-4">
+        <div class="d-flex gap-2 flex-wrap mb-2">
+
+          {% if item.post_type == "lost" %}
+            <span class="badge-soft badge-lost">🔴 LOST</span>
+          {% else %}
+            <span class="badge-soft badge-found">🟢 FOUND</span>
+          {% endif %}
+
+          {% if item.is_expensive %}
+            <span class="badge-soft badge-expensive">💎 Expensive</span>
+          {% endif %}
+
+        </div>
+
+        <h5 class="fw-bold mb-1">{{ item.title }}</h5>
+
+        <p class="text-muted mb-3">
+          <i class="bi bi-geo-alt"></i> {{ item.location }}
+          &nbsp; • &nbsp;
+          <i class="bi bi-tag"></i> {{ item.category }}
+        </p>
+
+        <a class="btn btn-outline-custom w-100" href="/item/{{ item.id }}">
+          <i class="bi bi-eye"></i> View Details
+        </a>
+      </div>
+
+    </div>
+  </div>
+  {% endfor %}
+
+  {% if items|length == 0 %}
+  <div class="col-12">
+    <div class="glass-card p-5 text-center">
+      <h4 class="fw-bold mb-2">No posts found 😭</h4>
+      <p class="text-muted mb-0">Try different filters or post a lost/found item ✨</p>
+
+      <div class="d-flex gap-3 mt-4 justify-content-center flex-wrap">
+        <a href="/report-lost" class="btn btn-gradient btn-lg">
+          <i class="bi bi-exclamation-circle"></i> Report Lost
+        </a>
+        <a href="/report-found" class="btn btn-outline-custom btn-lg">
+          <i class="bi bi-check-circle"></i> Report Found
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

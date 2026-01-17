@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - Findora{% endblock %}
+
+{% block content %}
+
+<div class="glass-card p-4 p-md-5 mb-4">
+  <h2 class="fw-bold mb-1">
+    <i class="bi bi-speedometer2"></i> Admin Dashboard
+  </h2>
+  <p class="text-muted mb-0">
+    Manage approvals, reports and platform safety 🔐🚩
+  </p>
+</div>
+
+<div class="row g-4">
+
+  <!-- Claims Approval -->
+  <div class="col-md-6 col-lg-4">
+    <div class="glass-card p-4 item-card">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <h5 class="fw-bold mb-0"><i class="bi bi-shield-lock"></i> Admin Claims</h5>
+        <span class="badge-soft badge-expensive">🔐</span>
+      </div>
+
+      <p class="text-muted mb-3">
+        Approve <b>expensive item</b> claims before finder approval.
+      </p>
+
+      <a href="/admin/claims" class="btn btn-gradient w-100">
+        Open Admin Claims
+      </a>
+    </div>
+  </div>
+
+  <!-- Reports -->
+  <div class="col-md-6 col-lg-4">
+    <div class="glass-card p-4 item-card">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <h5 class="fw-bold mb-0"><i class="bi bi-flag"></i> Reports</h5>
+        <span class="badge-soft badge-expensive">🚩</span>
+      </div>
+
+      <p class="text-muted mb-3">
+        Check reported posts and take action (archive/delete).
+      </p>
+
+      <a href="/admin/reports" class="btn btn-gradient w-100">
+        View Reports
+      </a>
+    </div>
+  </div>
+
+  <!-- Explore -->
+  <div class="col-md-6 col-lg-4">
+    <div class="glass-card p-4 item-card">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <h5 class="fw-bold mb-0"><i class="bi bi-search-heart"></i> Explore</h5>
+        <span class="badge-soft badge-found">✅</span>
+      </div>
+
+      <p class="text-muted mb-3">
+        Quickly check live posts in Explore page.
+      </p>
+
+      <a href="/explore" class="btn btn-outline-custom w-100">
+        Go to Explore
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- Extra Note -->
+<div class="glass-card p-4 p-md-5 mt-4">
+  <h5 class="fw-bold mb-2">✅ Admin Rules Reminder</h5>
+  <ul class="text-muted mb-0">
+    <li><b>Normal items</b> → Finder approval only</li>
+    <li><b>Expensive items</b> → Admin approval → Finder approval</li>
+    <li>Reports can be archived or deleted 🚩</li>
+  </ul>
+</div>
+
+{% endblock %}

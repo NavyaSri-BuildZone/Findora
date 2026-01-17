@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}My Claims - Findora{% endblock %}
+
+{% block content %}
+
+<div class="glass-card p-4 p-md-5 mb-4">
+  <h2 class="fw-bold mb-1"><i class="bi bi-clipboard-check"></i> My Claims</h2>
+  <p class="text-muted mb-0">Track your claimed items ✅</p>
+</div>
+
+<div class="row g-4">
+
+  {% for c in claims %}
+  <div class="col-md-6 col-lg-4">
+    <div class="glass-card p-4 item-card">
+
+      <!-- Badges -->
+      <div class="d-flex gap-2 flex-wrap mb-2">
+        {% if c.item.is_expensive %}
+          <span class="badge-soft badge-expensive">💎 Expensive</span>
+        {% endif %}
+
+        {% if c.status == "returned" %}
+          <span class="badge-soft badge-found">✅ Returned</span>
+        {% endif %}
+
+        <span class="badge-soft badge-expensive">
+          Status: {{ c.status.replace("_"," ").title() }}
+        </span>
+      </div>
+
+      <!-- Item Title -->
+      <h5 class="fw-bold mb-1">{{ c.item.title }}</h5>
+
+      <p class="text-muted mb-2">
+        <i class="bi bi-geo-alt"></i> {{ c.item.location }}
+      </p>
+
+      <p class="text-muted mb-3">
+        <i class="bi bi-tag"></i> {{ c.item.category }}
+      </p>
+
+      <!-- Buttons -->
+      <div class="d-flex gap-2 flex-wrap">
+
+        <a class="btn btn-outline-custom w-100" href="/item/{{ c.item.id }}">
+          <i class="bi bi-eye"></i> View Item
+        </a>
+
+        {% if c.status != "rejected" %}
+        <a class="btn btn-gradient w-100" href="/chat/{{ c.id }}">
+          <i class="bi bi-chat-dots"></i> Chat
+        </a>
+        {% endif %}
+
+        {% if c.status in ["finder_approved", "returned"] %}
+        <a class="btn btn-outline-custom w-100" href="/return/status/{{ c.id }}">
+          ✅ Return Status
+        </a>
+        {% endif %}
+
+        {% if c.status == "rejected" %}
+        <button class="btn btn-outline-custom w-100" disabled>
+          ❌ Claim Rejected
+        </button>
+        {% endif %}
+
+      </div>
+
+    </div>
+  </div>
+  {% endfor %}
+
+  {% if claims|length == 0 %}
+  <div class="col-12">
+    <div class="glass-card p-5 text-center">
+      <h4 class="fw-bold mb-2">No claims yet ✨</h4>
+      <p class="text-muted mb-0">Explore found items and claim your lost one ✅</p>
+
+      <div class="mt-4">
+        <a href="/explore" class="btn btn-gradient btn-lg">
+          <i class="bi bi-search-heart"></i> Explore
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

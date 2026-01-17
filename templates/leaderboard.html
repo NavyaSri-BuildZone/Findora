@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard - Findora{% endblock %}
+
+{% block content %}
+
+<div class="glass-card p-4 p-md-5 mb-4">
+  <h2 class="fw-bold mb-1">
+    <i class="bi bi-trophy"></i> Helper Leaderboard
+  </h2>
+  <p class="text-muted mb-0">
+    Top users who returned items successfully 🏆✨
+  </p>
+</div>
+
+<div class="glass-card p-4 p-md-5">
+
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>User</th>
+          <th>Email</th>
+          <th class="text-end">Points</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td class="fw-bold">{{ loop.index }}</td>
+
+          <td>
+            <div class="fw-bold">
+              {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% endif %}
+              {{ u.name }}
+            </div>
+            <div class="text-muted small">Mobile: {{ u.mobile }}</div>
+          </td>
+
+          <td class="text-muted">{{ u.email }}</td>
+
+          <td class="text-end fw-bold text-success">
+            {{ u.points }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if users|length == 0 %}
+    <div class="text-center text-muted py-4">
+      No users in leaderboard yet ✅
+    </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

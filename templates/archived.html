@@ -1,0 +1,73 @@
+
+{% extends "base.html" %}
+{% block title %}Archived Posts - Findora{% endblock %}
+
+{% block content %}
+
+<div class="glass-card p-4 p-md-5 mb-4">
+  <h2 class="fw-bold mb-1"><i class="bi bi-archive"></i> Archived Posts</h2>
+  <p class="text-muted mb-0">These posts are archived by Admin 🚩</p>
+</div>
+
+<div class="row g-4">
+
+  {% for item in items %}
+  <div class="col-md-6 col-lg-4">
+    <div class="glass-card item-card">
+
+      {% if item.image_filename %}
+        <img class="item-thumb"
+             src="{{ url_for('static', filename='uploads/' + item.image_filename) }}"
+             alt="item image">
+      {% else %}
+        <div class="item-thumb d-flex align-items-center justify-content-center">
+          <i class="bi bi-image text-muted fs-1"></i>
+        </div>
+      {% endif %}
+
+      <div class="p-4">
+        <div class="d-flex gap-2 flex-wrap mb-2">
+
+          <span class="badge-soft badge-expensive">🕒 Archived</span>
+
+          {% if item.post_type == "lost" %}
+            <span class="badge-soft badge-lost">🔴 LOST</span>
+          {% else %}
+            <span class="badge-soft badge-found">🟢 FOUND</span>
+          {% endif %}
+
+          {% if item.is_expensive %}
+            <span class="badge-soft badge-expensive">💎 Expensive</span>
+          {% endif %}
+
+        </div>
+
+        <h5 class="fw-bold mb-1">{{ item.title }}</h5>
+
+        <p class="text-muted mb-3">
+          <i class="bi bi-geo-alt"></i> {{ item.location }}
+          &nbsp; • &nbsp;
+          <i class="bi bi-tag"></i> {{ item.category }}
+        </p>
+
+        <a class="btn btn-outline-custom w-100" href="/item/{{ item.id }}">
+          <i class="bi bi-eye"></i> View Details
+        </a>
+
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  {% if items|length == 0 %}
+  <div class="col-12">
+    <div class="glass-card p-5 text-center">
+      <h4 class="fw-bold mb-2">No archived posts ✅</h4>
+      <p class="text-muted mb-0">Nothing is archived right now ✨</p>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

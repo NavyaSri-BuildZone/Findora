@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Home - Findora{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center g-4">
+
+  <!-- Left Hero -->
+  <div class="col-lg-7">
+    <div class="glass-card p-4 p-md-5">
+
+      <div class="pill mb-3">
+        🚀 Campus Lost & Found • Fast • Safe • Verified
+      </div>
+
+      <h1 class="fw-bold display-5 mb-3">
+        Lost something? <br>
+        Found something? <br>
+        <span class="grad-text">Findora will fix it ✨</span>
+      </h1>
+
+      <p class="text-muted mb-4">
+        Report lost/found items, claim safely, chat privately, and confirm return with proof ✅✅
+      </p>
+
+      <div class="d-flex gap-3 flex-wrap">
+        <a href="/report-lost" class="btn btn-gradient btn-lg">
+          <i class="bi bi-exclamation-circle"></i> Report Lost
+        </a>
+
+        <a href="/report-found" class="btn btn-outline-custom btn-lg">
+          <i class="bi bi-check-circle"></i> Report Found
+        </a>
+
+        <a href="/explore" class="btn btn-outline-custom btn-lg">
+          <i class="bi bi-search-heart"></i> Explore
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Right Card -->
+  <div class="col-lg-5">
+    <div class="glass-card p-4 p-md-5">
+
+      <h4 class="fw-bold mb-3">Why Findora? 💜</h4>
+
+      <div class="glass-card p-3 mb-3" style="background: rgba(255,255,255,0.35);">
+        <h6 class="fw-bold mb-1"><i class="bi bi-shield-check"></i> Safe Claim Flow</h6>
+        <p class="text-muted mb-0">
+          Normal items → Finder approves ✅ <br>
+          Expensive items → Admin approves first 🔐
+        </p>
+      </div>
+
+      <div class="glass-card p-3 mb-3" style="background: rgba(255,255,255,0.35);">
+        <h6 class="fw-bold mb-1"><i class="bi bi-chat-dots"></i> Private Chat</h6>
+        <p class="text-muted mb-0">
+          Finder & claimer can chat only after claim 💬
+        </p>
+      </div>
+
+      <div class="glass-card p-3" style="background: rgba(255,255,255,0.35);">
+        <h6 class="fw-bold mb-1"><i class="bi bi-check2-circle"></i> Return Confirmation</h6>
+        <p class="text-muted mb-0">
+          Both sides confirm ✅✅ so fake claims reduce.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Mini Steps -->
+<div class="glass-card p-4 p-md-5 mt-4">
+  <h4 class="fw-bold mb-3">How it works 🔥</h4>
+
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="glass-card p-4 item-card" style="background: rgba(255,255,255,0.35);">
+        <h6 class="fw-bold mb-2">1) Post</h6>
+        <p class="text-muted mb-0">Report lost or found item with details + photo.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="glass-card p-4 item-card" style="background: rgba(255,255,255,0.35);">
+        <h6 class="fw-bold mb-2">2) Claim + Approve</h6>
+        <p class="text-muted mb-0">Owners claim found items. Finder/admin verifies.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="glass-card p-4 item-card" style="background: rgba(255,255,255,0.35);">
+        <h6 class="fw-bold mb-2">3) Return ✅✅</h6>
+        <p class="text-muted mb-0">Both confirm return. Post closes automatically.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

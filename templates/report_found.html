@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Report Found - Findora{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+
+    <div class="glass-card p-4 p-md-5 mb-4">
+      <h2 class="fw-bold mb-1">🟢 Report Found Item</h2>
+      <p class="text-muted mb-0">Post found item details so the owner can claim ✅</p>
+    </div>
+
+    <div class="glass-card p-4 p-md-5">
+      <form method="POST" enctype="multipart/form-data">
+
+        <label class="form-label fw-semibold">Title</label>
+        <input class="form-control mb-3" name="title" placeholder="Example: iPhone 12" required>
+
+        <label class="form-label fw-semibold">Category</label>
+        <input class="form-control mb-3" name="category" placeholder="Example: Phone" required>
+
+        <label class="form-label fw-semibold">Color (optional)</label>
+        <input class="form-control mb-3" name="color" placeholder="Example: Black">
+
+        <label class="form-label fw-semibold">Location</label>
+        <input class="form-control mb-3" name="location" placeholder="Example: Library 2nd floor" required>
+
+        <label class="form-label fw-semibold">Description (optional)</label>
+        <textarea class="form-control mb-3" name="description" rows="3"
+                  placeholder="Any marks, stickers, details..."></textarea>
+
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" name="is_expensive" id="expFound">
+          <label class="form-check-label" for="expFound">
+            💎 Expensive item?
+          </label>
+        </div>
+
+        <label class="form-label fw-semibold">Upload Image (optional)</label>
+        <input class="form-control mb-4" type="file" name="image">
+
+        <button class="btn btn-gradient btn-lg w-100">
+          <i class="bi bi-check-circle"></i> Post Found Item
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
