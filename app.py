@@ -1,6 +1,9 @@
 import os
 import random
 import smtplib
+import requests
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from email.message import EmailMessage
 from datetime import datetime
 
@@ -41,28 +44,44 @@ def allowed_file(filename):
 
 
 def send_email_otp(to_email, otp):
-    """
-    Sends OTP to user's email using SMTP (Gmail recommended with App Password).
-    Requires:
-      MAIL_USERNAME, MAIL_PASSWORD in config.py or environment variables.
-    """
-    if not app.config.get("MAIL_USERNAME") or not app.config.get("MAIL_PASSWORD"):
-        # fallback for testing
-        print("⚠️ MAIL_USERNAME / MAIL_PASSWORD not set. OTP:", otp)
+    import os
+    import smtplib
+    import requests
+    from email.message import EmailMessage
+
+    subject = "Findora Password Reset OTP"
+    body = f"Your Findora OTP is: {otp}\n\nDo not share this OTP.\n\n- Team Findora"
+
+    # ✅ If Brevo key exists -> use Brevo (Render)
+    brevo_key = os.environ.get("BREVO_API_KEY")
+    from_email = os.environ.get("FROM_EMAIL", "findora.project@gmail.com")
+
+    if brevo_key:
+        url = "https://api.brevo.com/v3/smtp/email"
+        payload = {
+            "sender": {"name": "Findora", "email": from_email},
+            "to": [{"email": to_email}],
+            "subject": subject,
+            "htmlContent": f"<h2>Your OTP is: {otp}</h2><p>Do not share it.</p>"
+        }
+        headers = {
+            "accept": "application/json",
+            "api-key": brevo_key,
+            "content-type": "application/json"
+        }
+        r = requests.post(url, json=payload, headers=headers)
+        if r.status_code not in (200, 201, 202):
+            print("❌ Brevo email error:", r.status_code, r.text)
         return
 
+    # ✅ Otherwise use SMTP from config.py (Localhost)
     msg = EmailMessage()
-    msg["Subject"] = "Findora Password Reset OTP"
-    msg["From"] = app.config.get("MAIL_DEFAULT_SENDER", app.config["MAIL_USERNAME"])
+    msg["Subject"] = subject
+    msg["From"] = app.config.get("MAIL_DEFAULT_SENDER", app.config.get("MAIL_USERNAME"))
     msg["To"] = to_email
+    msg.set_content(body)
 
-    msg.set_content(
-        f"Your Findora OTP is: {otp}\n\n"
-        f"Do not share this OTP with anyone.\n\n"
-        f"- Findora Team"
-    )
-
-    with smtplib.SMTP(app.config["MAIL_SERVER"], app.config["MAIL_PORT"]) as server:
+    with smtplib.SMTP(app.config["MAIL_SERVER"], app.config["MAIL_PORT"], timeout=10) as server:
         if app.config.get("MAIL_USE_TLS", True):
             server.starttls()
         server.login(app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
