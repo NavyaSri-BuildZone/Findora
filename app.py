@@ -198,7 +198,7 @@ def login():
         return redirect(next_page) if next_page else redirect(url_for("home"))
 
     return render_template("login.html")
-s
+
 
 @app.route("/logout")
 @login_required
