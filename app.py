@@ -23,6 +23,8 @@ app.config.from_object(Config)
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 db.init_app(app)
+with app.app_context():
+    db.create_all()
 
 # Login manager
 login_manager = LoginManager()
@@ -44,15 +46,23 @@ def allowed_file(filename):
 
 
 def send_email_otp(to_email, otp):
-    import os
-    import smtplib
-    import requests
-    from email.message import EmailMessage
+    """
+    ✅ Localhost -> SMTP (Gmail)
+    ✅ Render -> Brevo API
+    """
 
     subject = "Findora Password Reset OTP"
-    body = f"Your Findora OTP is: {otp}\n\nDo not share this OTP.\n\n- Team Findora"
+    html_body = f"""
+    <div style="font-family:Arial,sans-serif; padding:20px;">
+      <h2 style="color:#7c3aed;">Findora OTP Verification ✅</h2>
+      <p>Your OTP is:</p>
+      <h1 style="letter-spacing:4px;">{otp}</h1>
+      <p style="color:gray;">Do not share this OTP with anyone.</p>
+      <p>✨ Team Findora</p>
+    </div>
+    """
 
-    # ✅ If Brevo key exists -> use Brevo (Render)
+    # ✅ 1) If BREVO_API_KEY exists -> Brevo (Render)
     brevo_key = os.environ.get("BREVO_API_KEY")
     from_email = os.environ.get("FROM_EMAIL", "findora.project@gmail.com")
 
@@ -62,30 +72,45 @@ def send_email_otp(to_email, otp):
             "sender": {"name": "Findora", "email": from_email},
             "to": [{"email": to_email}],
             "subject": subject,
-            "htmlContent": f"<h2>Your OTP is: {otp}</h2><p>Do not share it.</p>"
+            "htmlContent": html_body
         }
         headers = {
             "accept": "application/json",
             "api-key": brevo_key,
             "content-type": "application/json"
         }
+
         r = requests.post(url, json=payload, headers=headers)
         if r.status_code not in (200, 201, 202):
-            print("❌ Brevo email error:", r.status_code, r.text)
+            print("❌ Brevo error:", r.status_code, r.text)
+        else:
+            print("✅ OTP sent via Brevo")
         return
 
-    # ✅ Otherwise use SMTP from config.py (Localhost)
-    msg = EmailMessage()
-    msg["Subject"] = subject
-    msg["From"] = app.config.get("MAIL_DEFAULT_SENDER", app.config.get("MAIL_USERNAME"))
-    msg["To"] = to_email
-    msg.set_content(body)
+    # ✅ 2) Otherwise -> SMTP (Localhost)
+    mail_server = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
+    mail_port = int(os.environ.get("MAIL_PORT", "587"))
+    mail_username = os.environ.get("MAIL_USERNAME")
+    mail_password = os.environ.get("MAIL_PASSWORD")
 
-    with smtplib.SMTP(app.config["MAIL_SERVER"], app.config["MAIL_PORT"], timeout=10) as server:
-        if app.config.get("MAIL_USE_TLS", True):
+    if not mail_username or not mail_password:
+        print("⚠️ SMTP not configured (MAIL_USERNAME/MAIL_PASSWORD missing). OTP:", otp)
+        return
+
+    msg = MIMEMultipart()
+    msg["From"] = mail_username
+    msg["To"] = to_email
+    msg["Subject"] = subject
+    msg.attach(MIMEText(html_body, "html"))
+
+    try:
+        with smtplib.SMTP(mail_server, mail_port, timeout=10) as server:
             server.starttls()
-        server.login(app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
-        server.send_message(msg)
+            server.login(mail_username, mail_password)
+            server.sendmail(mail_username, to_email, msg.as_string())
+        print("✅ OTP sent via SMTP")
+    except Exception as e:
+        print("❌ SMTP error:", e)
 
 
 # ---------------- HOME ----------------
