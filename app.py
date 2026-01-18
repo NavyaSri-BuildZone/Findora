@@ -152,13 +152,18 @@ def register():
             flash("Mobile already registered ❌", "danger")
             return redirect(url_for("register"))
 
+        # ✅ Only this email becomes Admin permanently
+        ADMIN_EMAIL = "findora.project@gmail.com"
+        role = "admin" if email == ADMIN_EMAIL else "user"
+
         new_user = User(
             name=name,
             email=email,
             mobile=mobile,
             password_hash=generate_password_hash(password),
-            role="user"
+            role=role
         )
+
         db.session.add(new_user)
         db.session.commit()
 
@@ -175,16 +180,25 @@ def login():
         password = request.form.get("password", "")
 
         user = User.query.filter_by(email=email).first()
+
         if not user or not check_password_hash(user.password_hash, password):
             flash("Invalid email or password ❌", "danger")
             return redirect(url_for("login"))
 
+        # ✅ Auto-make only this email Admin (even if created earlier)
+        ADMIN_EMAIL = "findora.project@gmail.com"
+        if user.email == ADMIN_EMAIL and user.role != "admin":
+            user.role = "admin"
+            db.session.commit()
+
         login_user(user)
-        flash("Logged in successfully ✅", "success")
-        return redirect(url_for("home"))
+        flash("Login successful ✅", "success")
+
+        next_page = request.args.get("next")
+        return redirect(next_page) if next_page else redirect(url_for("home"))
 
     return render_template("login.html")
-
+s
 
 @app.route("/logout")
 @login_required
